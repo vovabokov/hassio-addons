@@ -8,8 +8,9 @@ RUN apk add --no-cache \
     curl \
     bash
 
-# Copy run script
-COPY run.sh /
-RUN chmod a+x /run.sh
+# Copy run script and fix line endings + permissions
+COPY run.sh /run.sh
+RUN sed -i 's/\r$//' /run.sh && \
+    chmod 755 /run.sh
 
 CMD [ "/run.sh" ]
