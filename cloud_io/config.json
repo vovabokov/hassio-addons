@@ -1,0 +1,22 @@
+{
+  "name": "cloud_io",
+  "version": "1.37",
+  "slug": "cloud_io",
+  "description": "cloud.io help access your HomeAssistant from world (с) Alex Bokov",
+  "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
+  "startup": "application",
+  "boot": "auto",
+  "init": false,
+  "homeassistant_api": true,
+  "hassio_api": true,
+  "options": { 
+    "client_id": 23456,
+    "client_ssh": false,
+    "router_webui": false
+  },
+  "schema": { 
+    "client_id": "int",
+    "client_ssh": "bool",
+    "router_webui": "bool"
+  }
+}
