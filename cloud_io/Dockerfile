@@ -1,5 +1,4 @@
-ARG BUILD_FROM
-FROM $BUILD_FROM
+FROM alpine:3.19
 
 # Install required packages
 RUN apk add --no-cache \
