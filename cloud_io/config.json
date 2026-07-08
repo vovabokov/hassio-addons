@@ -1,9 +1,9 @@
 {
   "name": "cloud_io",
-  "version": "1.37",
+  "version": "1.38",
   "slug": "cloud_io",
   "description": "cloud.io help access your HomeAssistant from world (с) Alex Bokov",
-  "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
+  "arch": ["aarch64", "amd64"],
   "startup": "application",
   "boot": "auto",
   "init": false,
