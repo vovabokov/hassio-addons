@@ -1,6 +1,6 @@
 {
   "name": "cloud_io",
-  "version": "1.38",
+  "version": "1.39",
   "slug": "cloud_io",
   "description": "cloud.io help access your HomeAssistant from world",
   "arch": ["aarch64", "amd64"],
