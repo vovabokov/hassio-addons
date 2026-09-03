@@ -1,8 +1,12 @@
 #!/bin/bash
-echo "cloud_io (c) Alex Bokov 2022-2024"
 
 KEY_PATH=/data/ssh_keys
 echo "[DEBUG] KEY_PATH=$KEY_PATH"
+
+# === Переменные для подключения (объявляем заранее) ===
+cloud_hostname='cloud.uzvhost.ru'
+cloud_username='cloudio'
+cloud_ssh_port=722
 
 # Создаём папку для ключей
 if [ ! -d "$KEY_PATH" ]; then
@@ -34,6 +38,10 @@ fi
 if [ -f "${KEY_PATH}/autossh_ed25519.pub" ]; then
     echo "[INFO] Public key:"
     cat "${KEY_PATH}/autossh_ed25519.pub"
+
+    # Автоматически добавляем ключ на сервер
+    echo "[INFO] Adding public key to cloud server..."
+    ssh -o StrictHostKeyChecking=no -p $cloud_ssh_port $cloud_username@$cloud_hostname "mkdir -p ~/.ssh && chmod 700 ~/.ssh && touch ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys && cat >> ~/.ssh/authorized_keys" < ${KEY_PATH}/autossh_ed25519.pub
 else
     echo "[ERROR] Public key file not found!"
     exit 1
@@ -54,9 +62,6 @@ curl -s -X GET -H "Authorization: Bearer ${SUPERVISOR_TOKEN}" -H "Content-Type: 
 hassio_ip=$(jq -r ".data.interfaces[] | .ipv4.address[]" /tmp/networkinfo | awk -F/ '{print $1}')
 router_ip=$(jq -r ".data.interfaces[] | .ipv4.gateway | select( . != null )" /tmp/networkinfo)
 
-cloud_hostname='cloud.uzvhost.ru'
-cloud_username='cloudio'
-cloud_ssh_port=722
 control_port=$((client_id))
 monitor_port=$((control_port+1))
 
