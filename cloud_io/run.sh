@@ -2,16 +2,46 @@
 echo "cloud_io (c) Alex Bokov 2022-2024"
 
 KEY_PATH=/data/ssh_keys
+echo "[DEBUG] KEY_PATH=$KEY_PATH"
+
+# Создаём папку для ключей
 if [ ! -d "$KEY_PATH" ]; then
-    echo "[INFO] Setup private key"
+    echo "[INFO] Creating directory $KEY_PATH"
     mkdir -p "$KEY_PATH"
-    ssh-keygen -t ed25519 -N "" -f "${KEY_PATH}/autossh_ed25519"
+    if [ $? -ne 0 ]; then
+        echo "[ERROR] Failed to create $KEY_PATH"
+        exit 1
+    fi
+    echo "[INFO] Directory created"
 else
-    echo "[INFO] Restore private_keys"
+    echo "[INFO] Directory $KEY_PATH already exists"
 fi
 
-echo "[INFO] public key is:"
-cat "${KEY_PATH}/autossh_ed25519.pub"
+# Проверяем наличие ключа
+if [ ! -f "${KEY_PATH}/autossh_ed25519" ]; then
+    echo "[INFO] Private key not found, generating new key..."
+    ssh-keygen -t ed25519 -N "" -f "${KEY_PATH}/autossh_ed25519" 2>&1
+    if [ $? -ne 0 ]; then
+        echo "[ERROR] Failed to generate SSH key"
+        exit 1
+    fi
+    echo "[INFO] Key generated successfully"
+else
+    echo "[INFO] Private key already exists, restoring..."
+fi
+
+# Выводим публичный ключ
+if [ -f "${KEY_PATH}/autossh_ed25519.pub" ]; then
+    echo "[INFO] Public key:"
+    cat "${KEY_PATH}/autossh_ed25519.pub"
+else
+    echo "[ERROR] Public key file not found!"
+    exit 1
+fi
+
+# Проверяем права
+echo "[INFO] Key files:"
+ls -la "$KEY_PATH"
 
 echo "[INFO] json config is:"
 cat /data/options.json
